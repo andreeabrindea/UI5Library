@@ -15,7 +15,7 @@
                 text='{i18n>AddBook}'
                 press='openDialogForAddNewBook'
             />
-            <core:Icon id="romanian-icon" src="./romanian.png"></core:Icon>
+            <!-- <core:Icon id="romanian-icon" src="./romanian.png"></core:Icon> -->
             <Table id="books-table" selectionChange="openDialogForUpdateDelete" mode="SingleSelect">
                 <columns>
                     <Column
