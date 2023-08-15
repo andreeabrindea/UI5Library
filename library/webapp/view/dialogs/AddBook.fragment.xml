@@ -1,0 +1,81 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Dialog
+        id="dialog"
+        title="Edit the book"
+        contentWidth="550px"
+        contentHeight="230px"
+        afterClose="onAfterCloseAddDialog"
+    >
+        <content>
+            <Panel id="panel">
+                <Label
+                    id="title-label-dialog"
+                    text="Title"
+                    labelFor="titleInput"
+                    design="Bold"
+                />
+
+                <Input
+                    id="title-input-dialog"
+                    required="true"
+                />
+
+                <Label
+                    id="author-label-dialog"
+                    text="Author"
+                    labelFor="authorInput"
+                    design="Bold"
+                />
+
+                <Input
+                    id="author-input-dialog"
+                    required="true"
+                />
+
+                <Label
+                    id="genre-label-dialog"
+                    text="Genre"
+                    labelFor="genreInput"
+                    design="Bold"
+                />
+
+                <Input
+                    id="genre-input-dialog"
+                    required="true"
+                />
+
+                <Label
+                    id="year-label-dialog"
+                    text="Year"
+                    labelFor="yearInput"
+                    design="Bold"
+                />
+
+                <Input
+                    id="year-input-dialog"
+                    required="true"
+                />
+            </Panel>
+        </content>
+
+        <beginButton>
+            <Button
+                id="add-button"
+                text="Add"
+                type="Emphasized"
+                press="onAddBook"
+            />
+        </beginButton>
+
+        <endButton>
+            <Button
+                id="close-button"
+                text="Close"
+                press="onAfterCloseAddDialog"
+            />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

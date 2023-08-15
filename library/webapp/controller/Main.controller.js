@@ -1,11 +1,13 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
-    "sap/m/MessageToast"
+    "sap/m/MessageToast",
+    "sap/ui/core/Fragment",
+    "sap/m/Dialog"
 ],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (Controller, MessageToast) {
+    function (Controller, MessageToast, Fragment, Dialog) {
         "use strict";
 
         return Controller.extend("library.controller.Main", {
@@ -67,16 +69,25 @@ sap.ui.define([
             onInit: function () {
                 this.clearTable();
                 this.populateTable();
+            },
+            openDialogForAddNewBook: function(){
+                this.addBookDialog = sap.ui.xmlfragment("library.view.dialogs.AddBook", this);
+                this.getView().addDependent(this.addBookDialog);
+                this.addBookDialog.open();
 
             },
-            addNewBook: function addNewBook() {
-    
+            onAfterCloseAddDialog: function (){
+                this.addBookDialog.close();
+                this.addBookDialog.destroy();
+
+            },
+            onAddBook: function(){
                 const table = this.getView().byId("books-table");
 
-                const titleInput = this.getView().byId("title-input");
-                const authorInput = this.getView().byId("author-input");
-                const genreInput = this.getView().byId("genre-input");
-                const yearInput = this.getView().byId("year-input");
+                const titleInput = sap.ui.getCore().byId("title-input-dialog");
+                const authorInput = sap.ui.getCore().byId("author-input-dialog");
+                const genreInput = sap.ui.getCore().byId("genre-input-dialog");
+                const yearInput = sap.ui.getCore().byId("year-input-dialog");
 
                 const title = titleInput.getValue();
                 const author = authorInput.getValue();
@@ -102,7 +113,8 @@ sap.ui.define([
 
                     this.populateTable();
                     table.addItem(newItem);
-                    this.clearBookInputs();
+                    this.addBookDialog.close();
+                    this.addBookDialog.destroy();
 
                 }
             else{
@@ -117,6 +129,7 @@ sap.ui.define([
                     this.verifyBookInputs(year, yearInput);
                     MessageToast.show("All the fields are required");
                 }
+                
 
             },
 
@@ -124,6 +137,7 @@ sap.ui.define([
                 const table = this.getView().byId("books-table");
                 table.removeAllItems();
             },
+
             populateTable: function populateTable() {
                 const table = this.getView().byId("books-table");
                 this.arrayOfBooks.forEach(item => {
@@ -137,81 +151,110 @@ sap.ui.define([
 
                     });
                     table.addItem(bookItem1);
-
                 })
-
             },
-            updateBook: function updateBook(oEvent) {
-                const titleInput = this.getView().byId("title-input");
-                const authorInput = this.getView().byId("author-input");
-                const genreInput = this.getView().byId("genre-input");
-                const yearInput = this.getView().byId("year-input");
-                const selected = oEvent.getSource().getSelectedItem();
-                titleInput.setValue(selected.getCells()[0].getText());
-                authorInput.setValue(selected.getCells()[1].getText());
+
+            openDialogForUpdateDelete: function (oEvent) {
+                const selected = oEvent.getParameter("listItem");
+                this.updateBookDialog = sap.ui.xmlfragment("library.view.dialogs.EditBook", this);
+                this.getView().addDependent(this.updateBookDialog);
+                this.updateBookDialog.open();
+            
+                const titleInput = sap.ui.getCore().byId("title-input-dialog");
+                const authorInput = sap.ui.getCore().byId("author-input-dialog");
+                const genreInput = sap.ui.getCore().byId("genre-input-dialog");
+                const yearInput = sap.ui.getCore().byId("year-input-dialog");
+            
+                titleInput.setValue(selected.getCells()[1].getText());
+                authorInput.setValue(selected.getCells()[0].getText());
                 genreInput.setValue(selected.getCells()[2].getText());
                 yearInput.setValue(selected.getCells()[3].getText());
+            },
 
-                const title = titleInput.getValue();
-                const author = authorInput.getValue();
-                const genre = genreInput.getValue();
-                const year = yearInput.getValue();
-
-                const cellTitle = new sap.m.Text({ text: title });
-                const cellAuthor = new sap.m.Text({ text: author });
-                const cellYear = new sap.m.Text({ text: year });
-                const cellGenre = new sap.m.Text({ text: genre });
-                const newItem = new sap.m.ColumnListItem({
-
-                    cells: [cellTitle, cellAuthor, cellGenre, cellYear],
-
-                });
-                table.removeItem();
-                table.insertItem(newItem, table.indexOfItem(selected));
+            onAfterCloseUpdateDeleteDialog: function (){
+                this.updateBookDialog.close();
+                this.updateBookDialog.destroy();
 
             },
-            getReadyBook: function getReadyBook() {
-                const titleInput = this.getView().byId("title-input");
-                const authorInput = this.getView().byId("author-input");
-                const genreInput = this.getView().byId("genre-input");
-                const yearInput = this.getView().byId("year-input");
-                const title = titleInput.getValue();
-                const author = authorInput.getValue();
-                const genre = genreInput.getValue();
-                const year = yearInput.getValue();
 
-                const cellTitle = new sap.m.Text({ text: title });
-                const cellAuthor = new sap.m.Text({ text: author });
-                const cellYear = new sap.m.Text({ text: year });
-                const cellGenre = new sap.m.Text({ text: genre });
-                const book = new sap.m.ColumnListItem({
+            updateBookData: function () {
+                const table = this.getView().byId("books-table");
+                const titleInput = sap.ui.getCore().byId("title-input-dialog");
+                const authorInput = sap.ui.getCore().byId("author-input-dialog");
+                const genreInput = sap.ui.getCore().byId("genre-input-dialog");
+                const yearInput = sap.ui.getCore().byId("year-input-dialog");
+            
+                const selected = table.getSelectedItem();
+            
+                if (selected) {
+                    const title = titleInput.getValue();
+                    const author = authorInput.getValue();
+                    const genre = genreInput.getValue();
+                    const year = yearInput.getValue();
+            
+                    selected.getCells()[1].setText(title);
+                    selected.getCells()[0].setText(author);
+                    selected.getCells()[2].setText(genre);
+                    selected.getCells()[3].setText(year);
+            
+                    this.updateBookDialog.close();
+                    this.updateBookDialog.destroy();
+                }
+            },
+            onDeleteBook: function(){
+                const table = this.getView().byId("books-table");
+                const titleInput = sap.ui.getCore().byId("title-input-dialog");
+                const authorInput = sap.ui.getCore().byId("author-input-dialog");
+                const genreInput = sap.ui.getCore().byId("genre-input-dialog");
+                const yearInput = sap.ui.getCore().byId("year-input-dialog");
+            
+                const selected = table.getSelectedItem();
+            
+                if (selected) {
+                    const title = titleInput.getValue();
+                    const author = authorInput.getValue();
+                    const genre = genreInput.getValue();
+                    const year = yearInput.getValue();
+            
+                    selected.getCells()[1].setText(title);
+                    selected.getCells()[0].setText(author);
+                    selected.getCells()[2].setText(genre);
+                    selected.getCells()[3].setText(year);
+                    table.removeItem(selected);
+            
+                    this.updateBookDialog.close();
+                    this.updateBookDialog.destroy();
+                }
+            },
+            
+            
+            // getReadyBook: function getReadyBook() {
+            //     const titleInput = this.getView().byId("title-input");
+            //     const authorInput = this.getView().byId("author-input");
+            //     const genreInput = this.getView().byId("genre-input");
+            //     const yearInput = this.getView().byId("year-input");
+            //     const title = titleInput.getValue();
+            //     const author = authorInput.getValue();
+            //     const genre = genreInput.getValue();
+            //     const year = yearInput.getValue();
 
-                    cells: [cellTitle, cellAuthor, cellGenre, cellYear],
+            //     const cellTitle = new sap.m.Text({ text: title });
+            //     const cellAuthor = new sap.m.Text({ text: author });
+            //     const cellYear = new sap.m.Text({ text: year });
+            //     const cellGenre = new sap.m.Text({ text: genre });
+            //     const book = new sap.m.ColumnListItem({
 
-                });
-                return book;
+            //         cells: [cellTitle, cellAuthor, cellGenre, cellYear],
 
-            }, 
+            //     });
+            //     return book;
+
+            // }, 
 
             verifyBookInputs: function verifyBookInputs(inputText, inputField){
                 if (inputText=== ""){
                     inputField.setValueState("Error");
                 }
             },
-            clearBookInputs: function clearBookInputs(){
-                const titleInput = this.getView().byId("title-input");
-                const authorInput = this.getView().byId("author-input");
-                const genreInput = this.getView().byId("genre-input");
-                const yearInput = this.getView().byId("year-input");
-
-                titleInput.setValue("");
-                authorInput.setValue("");
-                genreInput.setValue("");
-                yearInput.setValue("");
-                
-
-            }
-
-
         });
     });

@@ -8,32 +8,20 @@
         id="page"
         title="{i18n>title}"
     >
-    <Input id="title-input"
-			placeholder="Title">
-		</Input>
-        <Input id="author-input"
-			placeholder="Author">
-		</Input>
-        <Input id="genre-input"
-			placeholder="Genre">
-		</Input>
-        <Input id="year-input"
-			placeholder="Year"
-            type="Number">
-		</Input>
         <content>
             <Button
                 type="Emphasized"
                 id='add-book-button'
                 text='Add book'
-                press='addNewBook'
+                press='openDialogForAddNewBook'
             />
-            <Button
+             <Button
                 type="Emphasized"
-                id='update-book-button'
-                text='Update book'
+                id='delete-book-button'
+                text='Delete book'
+                press='openDialogForUpdateDelete'
             />
-            <Table id="books-table" selectionChange="updateBook" mode="SingleSelect">
+            <Table id="books-table" selectionChange="openDialogForUpdateDelete" mode="SingleSelect">
                 <columns>
                     <Column
                         id="title-column"
