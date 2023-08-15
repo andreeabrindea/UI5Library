@@ -1,0 +1,61 @@
+<mvc:View
+    controllerName="library.controller.BookDetailes"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+>
+    <Page
+        id="page"
+        title="{i18n>title}"
+    >
+        <content>
+            <Button
+                type="Emphasized"
+                id='add-book-button'
+                text='{i18n>AddBook}'
+                press='openDialogForAddNewBook'
+            />
+            <!-- <core:Icon id="romanian-icon" src="./romanian.png"></core:Icon> -->
+            <Table id="books-table" selectionChange="openDialogForUpdateDelete" mode="SingleSelect">
+                <columns>
+                    <Column
+                        id="title-column"
+                        width="1vw"
+                    >
+                        <Text
+                            id="title-text"
+                            text="{i18n>BookTitle}"
+                        />
+                    </Column>
+                    <Column
+                        id="author-column"
+                        width="1vw"
+                    >
+                        <Text
+                            id="author-text"
+                            text="{i18n>Author}"
+                        />
+                    </Column>
+                    <Column
+                        id="genre-column"
+                        width="1vw"
+                    >
+                        <Text
+                            id="genre-text"
+                            text="{i18n>Genre}"
+                        />
+                    </Column>
+                    <Column
+                        id="publication-year-column"
+                        width="1vw"
+                    >
+                        <Text
+                            id="publication-year-text"
+                            text="{i18n>PublicationYear}"
+                        />
+                    </Column>
+                </columns>
+            </Table>
+        </content>
+    </Page>
+</mvc:View>

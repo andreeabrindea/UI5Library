@@ -63,22 +63,28 @@
 
         <buttons>
             <Button
+                id="update-button"
+                text="Update"
+                type="Emphasized" 
+                press="updateBookData" 
+            />
+              <Button
                 id="delete-button"
                 text="Delete"
                 type="Emphasized"
                 press="onDeleteBook" 
             />
-            <Button
-                id="update-button"
-                text="Update"
-                type="Emphasized" 
-                press="updateBookData" 
+             <Button
+                id="view-button" 
+                text="View" 
+                press="onViewDetailes" 
             />
             <Button
                 id="close-button" 
                 text="Close" 
                 press="onAfterCloseUpdateDeleteDialog" 
             />
+
         </buttons>
     </Dialog>
 </core:FragmentDefinition>

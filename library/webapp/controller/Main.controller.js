@@ -7,7 +7,6 @@ sap.ui.define(
     "use strict";
 
     return Controller.extend("library.controller.Main", {
-
       onInit: function () {
         this.localStoredBooks = jQuery.sap.storage(
           jQuery.sap.storage.Type.local
@@ -72,13 +71,11 @@ sap.ui.define(
             ]);
             this.addBookDialog.close();
             this.addBookDialog.destroy();
-          } 
-          else {
+          } else {
             yearInput.setValueState("Error");
             MessageToast.show("Invalid year");
           }
-        } 
-        else {
+        } else {
           //nedded the function in order to determine which input texts are empty, without a lot of if checks
           this.verifyBookInputs(title, titleInput);
           this.verifyBookInputs(author, authorInput);
@@ -209,6 +206,13 @@ sap.ui.define(
             }
           },
         });
+      },
+
+      onViewDetailes: function () {
+        this.oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+        this.oRouter.navTo("BookDetailes");
+        this.updateBookDialog.close();
+        this.updateBookDialog.destroy();
       },
 
       verifyBookInputs: function (inputText, inputField) {
