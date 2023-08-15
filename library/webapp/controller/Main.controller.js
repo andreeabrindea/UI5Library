@@ -12,6 +12,10 @@ sap.ui.define(
           jQuery.sap.storage.Type.local
         );
         this.populateTable();
+        const addButton = this.getView().byId("add-book-button");
+        addButton.addStyleClass("sapUiSmallPadding");
+        addButton.addStyleClass("sapUiSmallMargin");
+        addButton.addStyleClass("sapUiTextHighlight");
       },
 
       openDialogForAddNewBook: function () {
