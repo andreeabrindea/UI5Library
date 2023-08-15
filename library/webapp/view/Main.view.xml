@@ -12,9 +12,10 @@
             <Button
                 type="Emphasized"
                 id='add-book-button'
-                text='Add book'
+                text='{i18n>AddBook}'
                 press='openDialogForAddNewBook'
             />
+            <core:Icon id="romanian-icon" src="./romanian.png"></core:Icon>
             <Table id="books-table" selectionChange="openDialogForUpdateDelete" mode="SingleSelect">
                 <columns>
                     <Column
@@ -23,7 +24,7 @@
                     >
                         <Text
                             id="title-text"
-                            text="Title"
+                            text="{i18n>BookTitle}"
                         />
                     </Column>
                     <Column
@@ -32,7 +33,7 @@
                     >
                         <Text
                             id="author-text"
-                            text="Author"
+                            text="{i18n>Author}"
                         />
                     </Column>
                     <Column
@@ -41,7 +42,7 @@
                     >
                         <Text
                             id="genre-text"
-                            text="Genre"
+                            text="{i18n>Genre}"
                         />
                     </Column>
                     <Column
@@ -50,7 +51,7 @@
                     >
                         <Text
                             id="publication-year-text"
-                            text="Publication Year"
+                            text="{i18n>PublicationYear}"
                         />
                     </Column>
                 </columns>
