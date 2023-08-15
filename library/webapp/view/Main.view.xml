@@ -15,12 +15,6 @@
                 text='Add book'
                 press='openDialogForAddNewBook'
             />
-             <Button
-                type="Emphasized"
-                id='delete-book-button'
-                text='Delete book'
-                press='openDialogForUpdateDelete'
-            />
             <Table id="books-table" selectionChange="openDialogForUpdateDelete" mode="SingleSelect">
                 <columns>
                     <Column

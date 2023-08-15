@@ -61,21 +61,24 @@
             </Panel>
         </content>
 
-        <beginButton>
+        <buttons>
             <Button
-                id="edit-button"
-                text="Edit"
+                id="delete-button"
+                text="Delete"
                 type="Emphasized"
-                press="updateBookData"
+                press="onDeleteBook" 
             />
-        </beginButton>
-
-        <endButton>
             <Button
-                id="close-button"
-                text="Close"
-                press="onAfterCloseUpdateDeleteDialog"
+                id="update-button"
+                text="Update"
+                type="Emphasized" 
+                press="updateBookData" 
             />
-        </endButton>
+            <Button
+                id="close-button" 
+                text="Close" 
+                press="onAfterCloseUpdateDeleteDialog" 
+            />
+        </buttons>
     </Dialog>
 </core:FragmentDefinition>
