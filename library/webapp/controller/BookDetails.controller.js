@@ -5,7 +5,7 @@ sap.ui.define(
     function(BookDetailes) {
       "use strict";
   
-      return BookDetailes.extend("library.controller.BookDetailes", {
+      return BookDetailes.extend("library.controller.BookDetails", {
         onInit() {
         }
       });

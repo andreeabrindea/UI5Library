@@ -96,7 +96,8 @@ sap.ui.define(
 
       populateTable: function () {
         const table = this.getView().byId("books-table");
-        let books = this.localStoredBooks.get("books");
+        let books = this.localStoredBooks.get("books") ?? [];
+
         books.forEach((item) => {
           const cellTitle = new sap.m.Text({ text: item.title });
           const cellAutor = new sap.m.Text({ text: item.author });
@@ -180,7 +181,8 @@ sap.ui.define(
       },
 
       onDeleteBook: function () {
-        MessageBox.confirm("Do you really want to delete this book?", {
+        const deleteMessage = this.getView().getModel("i18n").getResourceBundle().getText("deleteMessage");
+        MessageBox.confirm(deleteMessage, {
           actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
           emphasizedAction: MessageBox.Action.OK,
           onClose: (sAction) => {
@@ -212,9 +214,9 @@ sap.ui.define(
         });
       },
 
-      onViewDetailes: function () {
+      onViewDetails: function () {
         this.oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-        this.oRouter.navTo("BookDetailes");
+        this.oRouter.navTo("BookDetails");
         this.updateBookDialog.close();
         this.updateBookDialog.destroy();
       },
@@ -224,6 +226,31 @@ sap.ui.define(
           inputField.setValueState("Error");
         }
       },
+      toRomanianPage: function(){
+        let currentWindow = window.location.href;
+        if (currentWindow.includes("&sap-language=EN")){
+            currentWindow = currentWindow.replace("&sap-language=EN", "");
+        }
+        if (currentWindow.includes("&sap-language=RO")){
+            currentWindow = currentWindow.replace("&sap-language=RO", "");
+        }
+
+        let sNewUrl = currentWindow + "&sap-language=RO";
+        window.location.href = sNewUrl;
+          
+      },
+      toEnglishPage: function(){
+        let currentWindow = window.location.href;
+        if (currentWindow.includes("&sap-language=EN")){
+            currentWindow = currentWindow.replace("&sap-language=EN", "");
+        }
+        if (currentWindow.includes("&sap-language=RO")){
+            currentWindow = currentWindow.replace("&sap-language=RO", "");
+        }
+
+        let sNewUrl = currentWindow + "&sap-language=EN";
+        window.location.href = sNewUrl;
+      }
     });
   }
 );

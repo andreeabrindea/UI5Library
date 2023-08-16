@@ -13,7 +13,7 @@
             <Panel id="panel">
                 <Label
                     id="title-label-dialog"
-                    text="Title"
+                    text="{i18n>BookTitle}"
                     labelFor="titleInput"
                     design="Bold"
                 />
@@ -25,7 +25,7 @@
 
                 <Label
                     id="author-label-dialog"
-                    text="Author"
+                    text="{i18n>Author}"
                     labelFor="authorInput"
                     design="Bold"
                 />
@@ -37,7 +37,7 @@
 
                 <Label
                     id="genre-label-dialog"
-                    text="Genre"
+                    text="{i18n>Genre}"
                     labelFor="genreInput"
                     design="Bold"
                 />
@@ -49,7 +49,7 @@
 
                 <Label
                     id="year-label-dialog"
-                    text="Year"
+                    text="{i18n>PublicationYear}"
                     labelFor="yearInput"
                     design="Bold"
                 />
@@ -64,24 +64,24 @@
         <buttons>
             <Button
                 id="update-button"
-                text="Update"
+                text="{i18n>Update}"
                 type="Emphasized" 
                 press="updateBookData" 
             />
               <Button
                 id="delete-button"
-                text="Delete"
+                text="{i18n>Delete}"
                 type="Emphasized"
                 press="onDeleteBook" 
             />
              <Button
                 id="view-button" 
-                text="View" 
-                press="onViewDetailes" 
+                text="{i18n>View}" 
+                press="onViewDetails" 
             />
             <Button
                 id="close-button" 
-                text="Close" 
+                text="{i18n>Close}" 
                 press="onAfterCloseUpdateDeleteDialog" 
             />
 

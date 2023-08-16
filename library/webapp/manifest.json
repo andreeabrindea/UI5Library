@@ -85,9 +85,9 @@
           ]
         },
         {
-          "name": "BookDetailes",
-          "pattern": "BookDetailes",
-          "view": "BookDetailes"
+          "name": "BookDetails",
+          "pattern": "BookDetails",
+          "view": "BookDetails"
         }
       ],
       "targets": {

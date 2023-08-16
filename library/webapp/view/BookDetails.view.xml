@@ -1,5 +1,5 @@
 <mvc:View
-    controllerName="library.controller.BookDetailes"
+    controllerName="library.controller.BookDetails"
     xmlns:mvc="sap.ui.core.mvc"
     displayBlock="true"
     xmlns="sap.m"
@@ -9,5 +9,6 @@
         title="{i18n>title}"
     >
     <Label id="welcome-label" text="Here should be the detailes about the books"></Label>
+    
     </Page>
 </mvc:View>

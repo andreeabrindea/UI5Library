@@ -1,6 +1,7 @@
 <mvc:View
     controllerName="library.controller.Main"
     xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
     displayBlock="true"
     xmlns="sap.m"
 >
@@ -9,14 +10,37 @@
         title="{i18n>title}"
     >
         <content>
+            <FlexBox
+                id="flex-box-images"
+                alignItems="Start"
+                justifyContent="End"
+            >
+                <items>
+                    <Image
+                        id="uk-flag"
+                        src="/images/united-kingdom.png"
+                        width="3vh"
+                        press="toEnglishPage"
+                    />
+                        <Image
+                            id="romanian-flag"
+                            src="/images/romanian.png"
+                            width="3vh"
+                            press="toRomanianPage"
+                        />
+                </items>
+            </FlexBox>
             <Button
                 type="Emphasized"
                 id='add-book-button'
                 text='{i18n>AddBook}'
                 press='openDialogForAddNewBook'
             />
-            <!-- <core:Icon id="romanian-icon" src="./romanian.png"></core:Icon> -->
-            <Table id="books-table" selectionChange="openDialogForUpdateDelete" mode="SingleSelect">
+            <Table
+                id="books-table"
+                selectionChange="openDialogForUpdateDelete"
+                mode="SingleSelect"
+            >
                 <columns>
                     <Column
                         id="title-column"
