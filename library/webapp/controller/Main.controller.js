@@ -8,10 +8,12 @@ sap.ui.define(
 
     return Controller.extend("library.controller.Main", {
       onInit: function () {
-        this.localStoredBooks = jQuery.sap.storage(
+        this.localStorage = jQuery.sap.storage(
           jQuery.sap.storage.Type.local
         );
         this.populateTable();
+
+        //Some button costumization
         const addButton = this.getView().byId("add-book-button");
         addButton.addStyleClass("sapUiSmallPadding");
         addButton.addStyleClass("sapUiSmallMargin");
@@ -60,9 +62,9 @@ sap.ui.define(
             yearInput.setValueState(sap.ui.core.ValueState.None);
 
             table.addItem(newItem);
-            this.localStoredBooks.put("books", [
-              // ...this.localStoredBooks.get("books") !== null ? this.localStoredBooks.get("books") : []
-              ...(this.localStoredBooks.get("books") ?? []),
+            this.counter = this.localStorage.get("counter") ?? 0;
+            this.localStorage.put("books", [
+              ...(this.localStorage.get("books") ?? []),
               {
                 title: title,
 
@@ -71,8 +73,11 @@ sap.ui.define(
                 genre: genre,
 
                 year: year,
+                id: this.counter
               },
             ]);
+            this.counter = this.counter + 1;
+            this.localStorage.put("counter", this.counter)
             this.addBookDialog.close();
             this.addBookDialog.destroy();
           } else {
@@ -87,6 +92,7 @@ sap.ui.define(
           this.verifyBookInputs(year, yearInput);
           MessageToast.show("All the fields are required");
         }
+        this.localStorage
       },
 
       clearTable: function () {
@@ -96,8 +102,8 @@ sap.ui.define(
 
       populateTable: function () {
         const table = this.getView().byId("books-table");
-        let books = this.localStoredBooks.get("books") ?? [];
-
+        let books = this.localStorage.get("books") ?? [];
+  
         books.forEach((item) => {
           const cellTitle = new sap.m.Text({ text: item.title });
           const cellAutor = new sap.m.Text({ text: item.author });
@@ -145,7 +151,7 @@ sap.ui.define(
         const selected = table.getSelectedItem();
 
         if (selected) {
-          let books = this.localStoredBooks.get("books");
+          let books = this.localStorage.get("books");
           //find the index of the selected item from the table
           let index = books.findIndex((book) => {
             return (
@@ -173,7 +179,7 @@ sap.ui.define(
             genre: genre,
             year: year,
           };
-          this.localStoredBooks.put("books", books);
+          this.localStorage.put("books", books);
 
           this.updateBookDialog.close();
           this.updateBookDialog.destroy();
@@ -181,7 +187,10 @@ sap.ui.define(
       },
 
       onDeleteBook: function () {
-        const deleteMessage = this.getView().getModel("i18n").getResourceBundle().getText("deleteMessage");
+        const deleteMessage = this.getView()
+          .getModel("i18n")
+          .getResourceBundle()
+          .getText("deleteMessage");
         MessageBox.confirm(deleteMessage, {
           actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
           emphasizedAction: MessageBox.Action.OK,
@@ -192,7 +201,7 @@ sap.ui.define(
 
               if (selected) {
                 table.removeItem(selected);
-                let books = this.localStoredBooks.get("books");
+                let books = this.localStorage.get("books");
 
                 let index = books.findIndex((book) => {
                   return (
@@ -204,7 +213,7 @@ sap.ui.define(
                 });
 
                 books.splice(index, 1);
-                this.localStoredBooks.put("books", books);
+                this.localStorage.put("books", books);
 
                 this.updateBookDialog.close();
                 this.updateBookDialog.destroy();
@@ -215,8 +224,22 @@ sap.ui.define(
       },
 
       onViewDetails: function () {
+        const table = this.getView().byId("books-table");
+        const selected = table.getSelectedItem();
+        let books = this.localStorage.get("books");
+
+        let index = books.findIndex((book) => {
+          return (
+            book.title === selected.getCells()[0].getText() &&
+            book.author === selected.getCells()[1].getText() &&
+            book.genre === selected.getCells()[2].getText() &&
+            book.year === selected.getCells()[3].getText()
+          );
+        });
+
         this.oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-        this.oRouter.navTo("BookDetails");
+        this.oRouter.navTo("BookDetails", {id: books[index].id });
+
         this.updateBookDialog.close();
         this.updateBookDialog.destroy();
       },
@@ -226,31 +249,30 @@ sap.ui.define(
           inputField.setValueState("Error");
         }
       },
-      toRomanianPage: function(){
+      toRomanianPage: function () {
         let currentWindow = window.location.href;
-        if (currentWindow.includes("&sap-language=EN")){
-            currentWindow = currentWindow.replace("&sap-language=EN", "");
+        if (currentWindow.includes("&sap-language=EN")) {
+          currentWindow = currentWindow.replace("&sap-language=EN", "");
         }
-        if (currentWindow.includes("&sap-language=RO")){
-            currentWindow = currentWindow.replace("&sap-language=RO", "");
+        if (currentWindow.includes("&sap-language=RO")) {
+          currentWindow = currentWindow.replace("&sap-language=RO", "");
         }
 
         let sNewUrl = currentWindow + "&sap-language=RO";
         window.location.href = sNewUrl;
-          
       },
-      toEnglishPage: function(){
+      toEnglishPage: function () {
         let currentWindow = window.location.href;
-        if (currentWindow.includes("&sap-language=EN")){
-            currentWindow = currentWindow.replace("&sap-language=EN", "");
+        if (currentWindow.includes("&sap-language=EN")) {
+          currentWindow = currentWindow.replace("&sap-language=EN", "");
         }
-        if (currentWindow.includes("&sap-language=RO")){
-            currentWindow = currentWindow.replace("&sap-language=RO", "");
+        if (currentWindow.includes("&sap-language=RO")) {
+          currentWindow = currentWindow.replace("&sap-language=RO", "");
         }
 
         let sNewUrl = currentWindow + "&sap-language=EN";
         window.location.href = sNewUrl;
-      }
+      },
     });
   }
 );

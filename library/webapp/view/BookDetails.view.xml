@@ -8,7 +8,15 @@
         id="page"
         title="{i18n>title}"
     >
-    <Label id="welcome-label" text="Here should be the detailes about the books"></Label>
+    <Label id="welcome-label" text="Here should be the details about the books"></Label>
+     <Label id="_IDGenLabel1" text="Title:"/>
+      <Label id="_IDGenLabel2" text="{/title}"/>
+      <Label id="_IDGenLabel3" text="Author:"/>
+      <Label id="_IDGenLabel4" text="{/author}"/>
+      <Label id="_IDGenLabel5" text="Genre:"/>
+      <Label id="_IDGenLabel6" text="{/genre}"/>
+      <Label id="_IDGenLabel7" text="Year:"/>
+      <Label id="_IDGenLabel8" text="{/year}"/>
     
     </Page>
 </mvc:View>

@@ -86,8 +86,9 @@
         },
         {
           "name": "BookDetails",
-          "pattern": "BookDetails",
-          "view": "BookDetails"
+          "pattern": "BookDetails&id={id}",
+          "view": "BookDetails",
+          "target": "BookDetails"
         }
       ],
       "targets": {
@@ -98,12 +99,12 @@
           "viewId": "Main",
           "viewName": "Main"
         },
-        "BookDetailes": {
+        "BookDetails": {
           "viewType": "XML",
           "transition": "slide",
           "clearControlAggregation": false,
-          "viewId": "BookDetailes",
-          "viewName": "BookDetailes"
+          "viewId": "BookDetails",
+          "viewName": "BookDetails"
         }
         
       }
