@@ -249,6 +249,7 @@ sap.ui.define(
           inputField.setValueState("Error");
         }
       },
+      //TODO: function should be refactored - it could call a new function changeLanguage(locale: String) for example with parameter.
       toRomanianPage: function () {
         let currentWindow = window.location.href;
         if (currentWindow.includes("&sap-language=EN")) {

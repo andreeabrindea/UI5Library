@@ -6,24 +6,32 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
       this.getOwnerComponent()
         .getRouter()
         .getRoute("BookDetails")
-        .attachPatternMatched(this.myFunction, this);
+        .attachPatternMatched(this.oGetBookById, this);
       this.localStoredBooks = jQuery.sap.storage(jQuery.sap.storage.Type.local);
     },
-    myFunction: function () {
-      const hashParams = new URLSearchParams(window.location.hash.substr(1));
-      const id = hashParams.get("id");
+    oGetBookById: function () {
+      const id = this.oGetIdFromUrl();
       let books = this.localStoredBooks.get("books");
 
-      const oModel = new sap.ui.model.json.JSONModel({
-        title: books[id].title,
-        author: books[id].author,
-        genre: books[id].genre,
-        year: books[id].year,
+      let index = books.findIndex((book) => {
+        return book.id == id;
       });
-       this.getView().setModel(oModel);
-     // const oView = sap.ui.xmlview({});
-      this.setModel(oModel);
-      this.placeAt("content");
+
+      const oModel = new sap.ui.model.json.JSONModel({
+        title: books[index].title,
+        author: books[index].author,
+        genre: books[index].genre,
+        year: books[index].year,
+      });
+      this.getView().setModel(oModel);
+      //TODO: It is a good idea to set a name to the Model e.g.
+      //this.getView().setModel(oModel , "bookModel");
+    },
+
+    oGetIdFromUrl: function () {
+      const hashParam = new URLSearchParams(window.location.hash);
+      const id = hashParam.get("id");
+      return id;
     },
   });
 });
