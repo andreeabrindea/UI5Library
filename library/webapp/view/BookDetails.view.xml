@@ -8,31 +8,67 @@
         id="page"
         title="{i18n>title}"
     >
-    <Label
-                        id="label1"
-                        text="{/title}"
-                        width="500px"
-                    />
-            <FlexBox
-                id="flex-box-book-details"
-                direction="Column"
-                alignItems="Center"
-                justifyContent="Center"
-            >
-                <items>
-                    <Label
-                        id="_IDGenLabel4"
-                        text="{/author}"
-                    />
-                    <Label
-                        id="_IDGenLabel6"
-                        text="{/genre}"
-                    />
-                    <Label
-                        id="_IDGenLabel8"
-                        text="{/year}"
-                    />
-                </items>
-            </FlexBox>
+        <FlexBox
+            id="flex-box-cover-book"
+            direction="Column"
+            alignItems="Center"
+            justifyContent="Center"
+        >
+            <Image
+                id="book-cover"
+                src="{bookModel>/cover}"
+                height="50vh"
+            />
+            <Title
+                id="book-title"
+                level="H1"
+                text="{bookModel>/title}"
+            />
+        </FlexBox>
+        <FlexBox
+            id="flex-box-book-details"
+            direction="Column"
+            alignItems="Start"
+            justifyContent="Center"
+            class="sapUiMediumMarginBeginEnd"
+        >
+            <items>
+                <FlexBox
+                    id="flex-box-book-author-year"
+                    direction="Row"
+                    height="2vh"
+                    width="145px"
+                    justifyContent="SpaceBetween"
+                >
+                    <items>
+                        <Label
+                            id="_IDGenLabel4"
+                            text="Written by: {bookModel>/author} in "
+                        />
+                        <Label
+                            id="_IDGenLabel6"
+                            text=" {bookModel>/year}"
+                        />
+                    </items>
+                </FlexBox>
+                <Label
+                    id="_IDGenLabel8"
+                    text="{bookModel>/genre}"
+                />
+                <RatingIndicator
+                    id="RI_L"
+                    maxValue="5"
+                    class="sapUiSmallMarginBottom"
+                    value="4"
+                    iconSize="32px"
+                    tooltip="Rating Tooltip"
+                />
+                <Text
+                    id="book-description"
+                    text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            "
+                />
+            </items>
+        </FlexBox>
     </Page>
 </mvc:View>

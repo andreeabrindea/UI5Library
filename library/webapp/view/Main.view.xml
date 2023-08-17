@@ -20,13 +20,13 @@
                         id="uk-flag"
                         src="/images/united-kingdom.png"
                         width="3vh"
-                        press="toEnglishPage"
+                        press="toLanguagePage('sap-language=EN')"
                     />
                         <Image
                             id="romanian-flag"
                             src="/images/romanian.png"
                             width="3vh"
-                            press="toRomanianPage"
+                            press="toLanguagePage('sap-language=RO')"
                         />
                 </items>
             </FlexBox>
