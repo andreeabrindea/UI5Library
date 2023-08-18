@@ -6,25 +6,28 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
       this.getOwnerComponent()
         .getRouter()
         .getRoute("BookDetails")
-        .attachPatternMatched(this.onGetBookById, this);
+        .attachPatternMatched(this.getBookById, this);
       this.localStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local);
+      
+      this.costumizeFlexBoxes();
 
       this.ratingIndicator = this.getView().byId("book-rating-indicator");
-      this.onCostumizeFlexBoxes();
+      this.ratingIndicator.setEnabled(true);
+      this.ratingIndicator.setValue(0);
     },
-    onGetBookById: async function () {
-      const id = this.onGetIdFromUrl();
+
+    getBookById: async function () {
+      const id = this.getIdFromUrl();
       let books = this.localStorage.get("books");
 
       let index = books.findIndex((book) => {
         return book.id == id;
       });
-      const cover = await this.onGetBookCover(books[index].title);
+      const cover = await this.getBookCover(books[index].title);
       let average = this.getAverageRating();
-      if (average == 'NaN'){
+      if (average == "NaN") {
         average = 0;
       }
-      
 
       const oModel = new sap.ui.model.json.JSONModel({
         title: books[index].title,
@@ -37,13 +40,13 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
       this.getView().setModel(oModel, "bookModel");
     },
 
-    onGetIdFromUrl: function () {
+    getIdFromUrl: function () {
       const hashParam = new URLSearchParams(window.location.hash);
       const id = hashParam.get("id");
       return id;
     },
 
-    onGetBookCover: async function (title) {
+    getBookCover: async function (title) {
       const response = await fetch(
         `https://www.googleapis.com/books/v1/volumes?q=${title}&orderBy=relevance&printType=BOOKS`
       );
@@ -63,35 +66,29 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
       }
       return cover;
     },
-    onCostumizeFlexBoxes: function () {
+
+    costumizeFlexBoxes: function () {
       const titleAndCoverFlexBox = this.getView().byId("flex-box-cover-book");
       titleAndCoverFlexBox.addStyleClass("sapUiMediumPadding");
       titleAndCoverFlexBox.addStyleClass("sapUiMediumMargin");
     },
 
-    // onUpdateRatingIndicator: function () {
-    //   this.ratingCounter = this.localStorage.get("ratingCounter") ?? 0;
-    //   this.localStorage.put("ratingValues", [
-    //     ...(this.localStorage.get("ratingValues") ?? []),
-    //     {
-    //       value: ratingIndicator.getValue(),
-    //     },
-    //   ]);
-    // },
     onHandleChange: function () {
-      let idBook = this.onGetIdFromUrl();
+      let idBook = this.getIdFromUrl();
       this.localStorage.put("ratingValues", [
         ...(this.localStorage.get("ratingValues") ?? []),
         { idBook: idBook, value: this.ratingIndicator.getValue() },
       ]);
+      this.ratingIndicator.setEnabled(false);
     },
+
     getAverageRating: function () {
       let ratingValues = this.localStorage.get("ratingValues") ?? [];
 
       let sum = 0;
       let counter = 0;
       let average = 0;
-      let idOfCurrentBook = this.onGetIdFromUrl();
+      let idOfCurrentBook = this.getIdFromUrl();
 
       ratingValues.forEach((element) => {
         if (element.idBook == idOfCurrentBook) {
