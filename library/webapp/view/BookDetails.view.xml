@@ -80,52 +80,48 @@
                             id="average-rating"
                             text="{bookModel>/average}/5"
                         />
-                        <FlexBox id="_IDGenFlexBox1"
-                            width="90vw"
+                        <Table
+                            id="book-reviews"
+                            width="96vw"
                             backgroundDesign="Transparent"
-                            class="sapUiSmallMarginTopBottom"
-                            direction="Row"
+                            inset="true"
+                            noDataText="No review yet"
                         >
-                            <Image id="user-image"
-                                src="/images/student.png"
-                                height="5vh"
-                            />
-                            <Text id="user-comment"
-                                text="Lorem ipsum dolor st amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat"
-                            />
-                        </FlexBox>
-                        <FlexBox id="user-content"
-                            width="90vw"
-                            backgroundDesign="Transparent"
-                            class="sapUiSmallMarginTopBottom"
-                            direction="Row"
-                        >
-                            <Image id="user-image1"
-                                src="/images/student.png"
-                                height="5vh"
-                            />
-                            <Text id="user-comment1"
-                                text="Lorem ipsum dolor st amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat"
-                            />
-                        </FlexBox>
-                        <FlexBox direction="Column" width="95vw">
-                        <Title
-                            id="book-review-comment"
-                            level="H1"
-                            text="Leave a review"
-                        />
-                        <FeedInput id="user-feed-input"
-                            post="onPost"
-                            showIcon="true"
-                            icon="/images/student.png"
-                            maxLength="500"
-                            showExceededText="true"
-                            class="sapUiMediumMarginTopBottom"
-                            placeholder="Leave your review here">
+                            <columns>
+                                <Column />
+                            </columns>
+                        </Table>
 
-                            <!-- <TextArea id="user-input-text-area"></TextArea> -->
-                        </FeedInput>
-</FlexBox>                    </items>
+                        <FlexBox id="leave-review-flexbox"
+                            direction="Column"
+                            width="96vw"
+                        >
+                            <Title
+                                id="book-leave-review-title"
+                                level="H1"
+                                text="Leave a review"
+                                class="sapUiMediumMarginTop"
+                            />
+                            <RatingIndicator
+                                            id="ratinging-indicator-leave-review"
+                                            maxValue="5"
+                                            class="sapUiSmallMarginBottom"
+                                            tooltip="Rating Tooltip"
+                                            iconSize="22px"
+                                        />
+                            <FeedInput
+                                id="user-feed-input"
+                                rows="1"
+                                post="onPostComment"
+                                showIcon="true"
+                                icon="/images/student.png"
+                                maxLength="500"
+                                showExceededText="true"
+                                class="sapUiMediumMarginBottom"
+                                placeholder="Leave your review here"
+                            />
+                        </FlexBox>
+                    </items>
                 </FlexBox>
             </items>
         </FlexBox>

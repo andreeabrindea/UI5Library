@@ -8,12 +8,14 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
         .getRoute("BookDetails")
         .attachPatternMatched(this.getBookById, this);
       this.localStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local);
-      
+
       this.costumizeFlexBoxes();
 
       this.ratingIndicator = this.getView().byId("book-rating-indicator");
-      this.ratingIndicator.setEnabled(true);
-      this.ratingIndicator.setValue(0);
+      this.ratingIndicator.setValue(this.getAverageRating());
+      this.ratingIndicator.setEnabled(false);
+
+      this.populateTableOfReviews();
     },
 
     getBookById: async function () {
@@ -79,26 +81,118 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
         ...(this.localStorage.get("ratingValues") ?? []),
         { idBook: idBook, value: this.ratingIndicator.getValue() },
       ]);
-      this.ratingIndicator.setEnabled(false);
     },
 
     getAverageRating: function () {
-      let ratingValues = this.localStorage.get("ratingValues") ?? [];
+      // let ratingValues = this.localStorage.get("ratingValues") ?? [];
+      const reviews = this.localStorage.get("reviews") ?? [];
+      let idOfCurrentBook = this.getIdFromUrl();
 
       let sum = 0;
       let counter = 0;
       let average = 0;
-      let idOfCurrentBook = this.getIdFromUrl();
 
-      ratingValues.forEach((element) => {
-        if (element.idBook == idOfCurrentBook) {
+      reviews.forEach((review) => {
+        if (review.idBook === idOfCurrentBook) {
+          sum = sum + review.value;
           counter++;
-          sum = sum + element.value;
         }
       });
       average = sum / counter;
-      return average.toFixed(1);
+      average = average.toFixed(1);
+      return average;
     },
+
+    onPostComment: function () {
+      const inputText = this.getView().byId("user-feed-input");
+      const stars = this.getView().byId("ratinging-indicator-leave-review");
+      const tableOfReviews = this.getView().byId("book-reviews");
+
+      //First post the stars:
+      const cellStars = new sap.m.RatingIndicator({
+        value: stars.getValue(),
+        enabled: false,
+      });
+      const starsToBePosted = new sap.m.ColumnListItem({
+        cells: [cellStars],
+      });
+      tableOfReviews.addItem(starsToBePosted);
+
+      //Add the comment then:
+      const flexBox = new sap.m.FlexBox({
+        width: "94vw",
+        backgroundDesign: "Transparent",
+        direction: "Row",
+        items: [
+          new sap.m.Image({
+            src: "/images/student.png",
+            height: "5vh",
+          }),
+          new sap.m.Text({
+            text: inputText.getValue(),
+          }),
+        ],
+      });
+
+      const commentToBePosted = new sap.m.ColumnListItem({
+        cells: [flexBox],
+      });
+      const idBook = this.getIdFromUrl();
+      const value = stars.getValue();
+      const comment = inputText.getValue();
+
+      tableOfReviews.addItem(commentToBePosted);
+
+      //set review to the local storage
+      this.localStorage.put("reviews", [
+        ...(this.localStorage.get("reviews") ?? []),
+        { idBook: idBook, value: value, comment: comment },
+      ]);
+      location.reload();
+
+      stars.setValue(0);
+      this.ratingIndicator.setValue(this.getAverageRating());
+    },
+
+    populateTableOfReviews: function () {
+      const tableOfReviews = this.getView().byId("book-reviews");
+      const currentBookId = this.getIdFromUrl();
+      const reviews = this.localStorage.get("reviews") ?? [];
+      reviews.forEach((review) => {
+        if (review.idBook === currentBookId) {
+          const cellStars = new sap.m.RatingIndicator({
+            value: review.value,
+            enabled: false,
+          });
+          const starsToBePosted = new sap.m.ColumnListItem({
+            cells: [cellStars],
+          });
+          tableOfReviews.addItem(starsToBePosted);
+
+          const flexBox = new sap.m.FlexBox({
+            width: "94vw",
+            backgroundDesign: "Transparent",
+            direction: "Row",
+            items: [
+              new sap.m.Image({
+                src: "/images/student.png",
+                height: "5vh",
+              }),
+              new sap.m.Text({
+                text: review.comment,
+              }),
+            ],
+          });
+
+          const commentToBePosted = new sap.m.ColumnListItem({
+            cells: [flexBox],
+          });
+
+          tableOfReviews.addItem(commentToBePosted);
+        }
+      });
+    },
+
     //TODO: Maybe add a description
     // onGetBookDescription: async function (title) {
     //   const response = await fetch(
