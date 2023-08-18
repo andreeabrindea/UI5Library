@@ -76,15 +76,10 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
     },
 
     onHandleChange: function () {
-      let idBook = this.getIdFromUrl();
-      this.localStorage.put("ratingValues", [
-        ...(this.localStorage.get("ratingValues") ?? []),
-        { idBook: idBook, value: this.ratingIndicator.getValue() },
-      ]);
+      this.ratingIndicator.setValue(this.getAverageRating());
     },
 
     getAverageRating: function () {
-      // let ratingValues = this.localStorage.get("ratingValues") ?? [];
       const reviews = this.localStorage.get("reviews") ?? [];
       let idOfCurrentBook = this.getIdFromUrl();
 
@@ -148,10 +143,13 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
         ...(this.localStorage.get("reviews") ?? []),
         { idBook: idBook, value: value, comment: comment },
       ]);
-      location.reload();
-
       stars.setValue(0);
-      this.ratingIndicator.setValue(this.getAverageRating());
+      //Update the current rating
+      const currentRating = this.getAverageRating();
+      this.ratingIndicator.setValue(currentRating);
+      const averageRatingLabel = this.getView().byId("average-rating");
+      averageRatingLabel.setText(currentRating);
+
     },
 
     populateTableOfReviews: function () {

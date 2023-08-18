@@ -242,6 +242,7 @@ sap.ui.define(
 
         this.updateBookDialog.close();
         this.updateBookDialog.destroy();
+        location.reload();
       },
 
       verifyBookInputs: function (inputText, inputField) {
