@@ -49,24 +49,29 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
     },
 
     getBookCover: async function (title) {
-      const response = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?q=${title}&orderBy=relevance&printType=BOOKS`
-      );
-      let cover =
-        "https://images.unsplash.com/photo-1589998059171-988d887df646?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8b3BlbiUyMGJvb2t8ZW58MHx8MHx8fDA%3D&w=1000&q=80";
-      const data = await response.json();
-      if (data.totalItems > 0) {
-        if (data.items[0].hasOwnProperty("volumeInfo")) {
-          if (data.items[0].volumeInfo.hasOwnProperty("imageLinks")) {
-            if (
-              data.items[0].volumeInfo.imageLinks.hasOwnProperty("thumbnail")
-            ) {
-              cover = data.items[0].volumeInfo.imageLinks.thumbnail;
+      try {
+        const response = await fetch(
+          `https://www.googleapis.com/books/v1/volumes?q=${title}&orderBy=relevance&printType=BOOKS`
+        );
+        let cover =
+          "https://images.unsplash.com/photo-1589998059171-988d887df646?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8b3BlbiUyMGJvb2t8ZW58MHx8MHx8fDA%3D&w=1000&q=80";
+        const data = await response.json();
+        if (data.totalItems > 0) {
+          if (data.items[0].hasOwnProperty("volumeInfo")) {
+            if (data.items[0].volumeInfo.hasOwnProperty("imageLinks")) {
+              if (
+                data.items[0].volumeInfo.imageLinks.hasOwnProperty("thumbnail")
+              ) {
+                cover = data.items[0].volumeInfo.imageLinks.thumbnail;
+              }
             }
           }
         }
+        return cover;
+      } catch (error) {
+        console.log("There was a problem while fetching the cover", error);
       }
-      return cover;
+  
     },
 
     costumizeFlexBoxes: function () {
@@ -148,8 +153,8 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
       const currentRating = this.getAverageRating();
       this.ratingIndicator.setValue(currentRating);
       const averageRatingLabel = this.getView().byId("average-rating");
-      averageRatingLabel.setText(currentRating);
-
+      const averageRatingText = currentRating + "/5";
+      averageRatingLabel.setText(averageRatingText);
     },
 
     populateTableOfReviews: function () {
