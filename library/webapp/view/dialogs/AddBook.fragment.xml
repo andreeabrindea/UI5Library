@@ -4,7 +4,7 @@
 >
     <Dialog
         id="dialog"
-        title="Edit the book"
+        title="{i18n>AddBook}"
         contentWidth="550px"
         contentHeight="230px"
         afterClose="onAfterCloseAddDialog"
@@ -13,7 +13,7 @@
             <Panel id="panel">
                 <Label
                     id="title-label-dialog"
-                    text="Title"
+                    text="{i18n>BookTitle}"
                     labelFor="titleInput"
                     design="Bold"
                 />
@@ -25,7 +25,7 @@
 
                 <Label
                     id="author-label-dialog"
-                    text="Author"
+                    text="{i18n>Author}"
                     labelFor="authorInput"
                     design="Bold"
                 />
@@ -37,7 +37,7 @@
 
                 <Label
                     id="genre-label-dialog"
-                    text="Genre"
+                    text="{i18n>Genre}"
                     labelFor="genreInput"
                     design="Bold"
                 />
@@ -49,7 +49,7 @@
 
                 <Label
                     id="year-label-dialog"
-                    text="Year"
+                    text="{i18n>PublicationYear}"
                     labelFor="yearInput"
                     design="Bold"
                 />
