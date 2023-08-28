@@ -72,6 +72,7 @@ declare namespace is {
     var plainObject: <Value = unknown>(value: unknown) => value is Record<PropertyKey, Value>;
     var typedArray: (value: unknown) => value is TypedArray;
     var arrayLike: <T = unknown>(value: unknown) => value is ArrayLike<T>;
+    var tupleLike: <T extends TypeGuard<unknown>[]>(value: unknown, guards: [...T]) => value is ResolveTypesOfTypeGuardsTuple<T, []>;
     var inRange: (value: number, range: number | number[]) => value is number;
     var domElement: (value: unknown) => value is HTMLElement;
     var observable: (value: unknown) => value is ObservableLike;
@@ -101,6 +102,8 @@ export type ArrayLike<T> = {
     readonly [index: number]: T;
     readonly length: number;
 };
+type TypeGuard<T> = (value: unknown) => value is T;
+type ResolveTypesOfTypeGuardsTuple<TypeGuardsOfT, ResultOfT extends unknown[] = []> = TypeGuardsOfT extends [TypeGuard<infer U>, ...infer TOthers] ? ResolveTypesOfTypeGuardsTuple<TOthers, [...ResultOfT, U]> : TypeGuardsOfT extends undefined[] ? ResultOfT : never;
 export type NodeStream = {
     pipe<T extends NodeJS.WritableStream>(destination: T, options?: {
         end?: boolean;
@@ -123,6 +126,7 @@ export declare const enum AssertionTypeDescription {
     safeInteger = "integer",
     plainObject = "plain object",
     arrayLike = "array-like",
+    tupleLike = "tuple-like",
     typedArray = "TypedArray",
     domElement = "HTMLElement",
     nodeStream = "Node.js Stream",
@@ -210,6 +214,7 @@ type Assert = {
     plainObject: <Value = unknown>(value: unknown) => asserts value is Record<PropertyKey, Value>;
     typedArray: (value: unknown) => asserts value is TypedArray;
     arrayLike: <T = unknown>(value: unknown) => asserts value is ArrayLike<T>;
+    tupleLike: <T extends Array<TypeGuard<unknown>>>(value: unknown, guards: [...T]) => asserts value is ResolveTypesOfTypeGuardsTuple<T>;
     domElement: (value: unknown) => asserts value is HTMLElement;
     observable: (value: unknown) => asserts value is ObservableLike;
     nodeStream: (value: unknown) => asserts value is NodeStream;

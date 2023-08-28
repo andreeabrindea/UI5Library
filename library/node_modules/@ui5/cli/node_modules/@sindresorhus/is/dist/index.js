@@ -223,6 +223,12 @@ is.plainObject = (value) => {
 is.typedArray = (value) => isTypedArrayName(getObjectType(value));
 const isValidLength = (value) => is.safeInteger(value) && value >= 0;
 is.arrayLike = (value) => !is.nullOrUndefined(value) && !is.function_(value) && isValidLength(value.length);
+is.tupleLike = (value, guards) => {
+    if (is.array(guards) && is.array(value) && guards.length === value.length) {
+        return guards.every((guard, index) => guard(value[index]));
+    }
+    return false;
+};
 is.inRange = (value, range) => {
     if (is.number(range)) {
         return value >= Math.min(0, range) && value <= Math.max(range, 0);
@@ -390,6 +396,7 @@ export const assert = {
     plainObject: (value) => assertType(is.plainObject(value), "plain object" /* AssertionTypeDescription.plainObject */, value),
     typedArray: (value) => assertType(is.typedArray(value), "TypedArray" /* AssertionTypeDescription.typedArray */, value),
     arrayLike: (value) => assertType(is.arrayLike(value), "array-like" /* AssertionTypeDescription.arrayLike */, value),
+    tupleLike: (value, guards) => assertType(is.tupleLike(value, guards), "tuple-like" /* AssertionTypeDescription.tupleLike */, value),
     domElement: (value) => assertType(is.domElement(value), "HTMLElement" /* AssertionTypeDescription.domElement */, value),
     observable: (value) => assertType(is.observable(value), 'Observable', value),
     nodeStream: (value) => assertType(is.nodeStream(value), "Node.js Stream" /* AssertionTypeDescription.nodeStream */, value),
