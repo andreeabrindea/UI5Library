@@ -1,0 +1,26 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Dialog
+        id="dialog"
+        title="{i18n>WarningAddReview}"
+        contentWidth="550px"
+        contentHeight="100px"
+        afterClose="onAfterCloseWarningDialog"
+    >
+        <content>
+            <Text
+                text="Too many reviews already. There is a limit with three reviews per book, due to Local Storage Limitation. Maybe delete some of them to make room for yours or choose other book. ^^"
+                class="sapUiSmallMarginBegin sapUiSmallMarginTop"
+            />
+        </content>
+        <endButton>
+            <Button
+                id="close-button"
+                text="Close"
+                press="onAfterCloseWarningDialog"
+            />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

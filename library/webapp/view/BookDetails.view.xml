@@ -74,7 +74,7 @@
                             class="sapUiSmallMarginBottom"
                             iconSize="32px"
                             tooltip="Rating Tooltip"
-                            change="onHandleChange"
+                            enabled="false"
                         />
                         <Label
                             id="average-rating"
@@ -88,11 +88,12 @@
                             noDataText="No review yet"
                         >
                             <columns>
-                                <Column />
+                                <Column id="empty-column" />
                             </columns>
                         </Table>
-
-                        <FlexBox id="leave-review-flexbox"
+        
+                        <FlexBox
+                            id="leave-review-flexbox"
                             direction="Column"
                             width="96vw"
                         >
@@ -103,12 +104,12 @@
                                 class="sapUiMediumMarginTop"
                             />
                             <RatingIndicator
-                                            id="ratinging-indicator-leave-review"
-                                            maxValue="5"
-                                            class="sapUiSmallMarginBottom"
-                                            tooltip="Rating Tooltip"
-                                            iconSize="22px"
-                                        />
+                                id="ratinging-indicator-leave-review"
+                                maxValue="5"
+                                class="sapUiSmallMarginBottom"
+                                tooltip="Rating Tooltip"
+                                iconSize="22px"
+                            />
                             <FeedInput
                                 id="user-feed-input"
                                 rows="1"

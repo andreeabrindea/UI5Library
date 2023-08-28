@@ -13,7 +13,6 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
 
       this.ratingIndicator = this.getView().byId("book-rating-indicator");
       this.ratingIndicator.setValue(this.getAverageRating());
-      this.ratingIndicator.setEnabled(false);
 
       this.populateTableOfReviews();
     },
@@ -71,17 +70,12 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
       } catch (error) {
         console.log("There was a problem while fetching the cover", error);
       }
-  
     },
 
     costumizeFlexBoxes: function () {
       const titleAndCoverFlexBox = this.getView().byId("flex-box-cover-book");
       titleAndCoverFlexBox.addStyleClass("sapUiMediumPadding");
       titleAndCoverFlexBox.addStyleClass("sapUiMediumMargin");
-    },
-
-    onHandleChange: function () {
-      this.ratingIndicator.setValue(this.getAverageRating());
     },
 
     getAverageRating: function () {
@@ -107,18 +101,114 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
       const inputText = this.getView().byId("user-feed-input");
       const stars = this.getView().byId("ratinging-indicator-leave-review");
       const tableOfReviews = this.getView().byId("book-reviews");
+      this.counterForReviews = this.localStorage.get("counterReviews") ?? 0;
 
       //First post the stars:
-      const cellStars = new sap.m.RatingIndicator({
-        value: stars.getValue(),
+      //refactor
+      const idBook = this.getIdFromUrl();
+      const allTheReviews = this.localStorage.get("reviews") ?? [];
+      let reviewsForCurrentBook = [];
+      allTheReviews.forEach((review) => {
+        if (review.idBook === idBook) {
+          reviewsForCurrentBook.push(review);
+        }
+      });
+      if (reviewsForCurrentBook.length <= 2) {
+        this.addRateIndicatorToTable(stars.getValue(), tableOfReviews);
+        this.addCommentToTable(inputText.getValue(), tableOfReviews);
+
+        const value = stars.getValue();
+        const comment = inputText.getValue();
+
+        //set review to the local storage
+        //TODO: remove it
+        this.localStorage.put("reviews", [
+          ...(this.localStorage.get("reviews") ?? []),
+          {
+            idReview: this.counterForReviews,
+            idBook: idBook,
+            value: value,
+            comment: comment,
+          },
+        ]);
+        //increase the counter
+        this.counterForReviews = this.counterForReviews + 1;
+        stars.setValue(0);
+        //Update the current rating
+        const currentRating = this.getAverageRating();
+        this.ratingIndicator.setValue(currentRating);
+        const averageRatingLabel = this.getView().byId("average-rating");
+        const averageRatingText = currentRating + "/5";
+        averageRatingLabel.setText(averageRatingText);
+      }else{
+        this.openDialogForWarning();
+        stars.setValue(0);
+      }
+    },
+    openDialogForWarning: function () {
+      this.addWarningDialog = sap.ui.xmlfragment(
+        "library.view.dialogs.AddReviewWarning",
+        this
+      );
+      this.getView().addDependent(this.addWarningDialog);
+      this.addWarningDialog.open();
+    },
+    onAfterCloseWarningDialog: function () {
+      this.addWarningDialog.close();
+      this.addWarningDialog.destroy();
+    },
+
+    onDeleteReview: function () {
+      let localStorageReviews = jQuery.sap.storage(
+        jQuery.sap.storage.Type.local
+      );
+
+      let reviews = localStorageReviews.get("reviews") ?? [];
+      
+      reviews = reviews.filter((review) => {
+        return (
+          review.comment != this.param1
+        );
+      });
+      localStorageReviews.put("reviews", reviews);
+
+      //since we do not have access to the instances of the class inside the event to call onInit() refresh the page so it will eventually be called
+      location.reload();
+    },
+
+    populateTableOfReviews: function () {
+      const tableOfReviews = this.getView().byId("book-reviews");
+      const currentBookId = this.getIdFromUrl();
+      const reviews = this.localStorage.get("reviews") ?? [];
+      reviews.forEach((review) => {
+        if (review.idBook === currentBookId) {
+          this.addRateIndicatorToTable(review.value, tableOfReviews);
+          this.addCommentToTable(review.comment, tableOfReviews);
+        }
+      });
+    },
+
+    addRateIndicatorToTable(value, tableOfReviews) {
+      const stars = new sap.m.RatingIndicator({
+        value: value,
         enabled: false,
       });
+      const flexBox = new sap.m.FlexBox({
+        width: "94vw",
+        backgroundDesign: "Transparent",
+        direction: "Row",
+        items: [
+          stars
+        ],
+      });
+
       const starsToBePosted = new sap.m.ColumnListItem({
-        cells: [cellStars],
+        cells: [flexBox],
       });
       tableOfReviews.addItem(starsToBePosted);
+    },
 
-      //Add the comment then:
+    addCommentToTable(textOfTheReview, tableOfReviews) {
       const flexBox = new sap.m.FlexBox({
         width: "94vw",
         backgroundDesign: "Transparent",
@@ -129,7 +219,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
             height: "5vh",
           }),
           new sap.m.Text({
-            text: inputText.getValue(),
+            text: textOfTheReview,
           }),
         ],
       });
@@ -137,79 +227,19 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
       const commentToBePosted = new sap.m.ColumnListItem({
         cells: [flexBox],
       });
-      const idBook = this.getIdFromUrl();
-      const value = stars.getValue();
-      const comment = inputText.getValue();
 
       tableOfReviews.addItem(commentToBePosted);
 
-      //set review to the local storage
-      this.localStorage.put("reviews", [
-        ...(this.localStorage.get("reviews") ?? []),
-        { idBook: idBook, value: value, comment: comment },
-      ]);
-      stars.setValue(0);
-      //Update the current rating
-      const currentRating = this.getAverageRating();
-      this.ratingIndicator.setValue(currentRating);
-      const averageRatingLabel = this.getView().byId("average-rating");
-      const averageRatingText = currentRating + "/5";
-      averageRatingLabel.setText(averageRatingText);
-    },
-
-    populateTableOfReviews: function () {
-      const tableOfReviews = this.getView().byId("book-reviews");
-      const currentBookId = this.getIdFromUrl();
-      const reviews = this.localStorage.get("reviews") ?? [];
-      reviews.forEach((review) => {
-        if (review.idBook === currentBookId) {
-          const cellStars = new sap.m.RatingIndicator({
-            value: review.value,
-            enabled: false,
-          });
-          const starsToBePosted = new sap.m.ColumnListItem({
-            cells: [cellStars],
-          });
-          tableOfReviews.addItem(starsToBePosted);
-
-          const flexBox = new sap.m.FlexBox({
-            width: "94vw",
-            backgroundDesign: "Transparent",
-            direction: "Row",
-            items: [
-              new sap.m.Image({
-                src: "/images/student.png",
-                height: "5vh",
-              }),
-              new sap.m.Text({
-                text: review.comment,
-              }),
-            ],
-          });
-
-          const commentToBePosted = new sap.m.ColumnListItem({
-            cells: [flexBox],
-          });
-
-          tableOfReviews.addItem(commentToBePosted);
-        }
+      const deleteButton = new sap.m.Button({
+        type: "Reject",
+        text: "Delete",
+      })
+      deleteButton.attachPress(this.onDeleteReview, {param1: textOfTheReview})
+      const buttonToBeAdded = new sap.m.ColumnListItem({
+        cells: [deleteButton],
       });
+      tableOfReviews.addItem(buttonToBeAdded);
     },
 
-    //TODO: Maybe add a description
-    // onGetBookDescription: async function (title) {
-    //   const response = await fetch(
-    //     `https://www.googleapis.com/books/v1/volumes?q=${title}&orderBy=relevance&printType=BOOKS`
-    //   );
-    //   let description = "No description found.";
-    //   const data = await response.json();
-    //   if (data.totalItems > 0) {
-    //     if (data.items[0].volumeInfo.imageLinks.thumbnail){
-    //       console.log(typeof(data.items[0].volumeInfo.imageLinks));
-    //       description = data.items[0].volumeInfo.imageLinks.thumbnail;
-    //   }
-    // }
-    //   return cover;
-    // },
   });
 });
