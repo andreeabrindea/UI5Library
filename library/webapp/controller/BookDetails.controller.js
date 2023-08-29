@@ -157,24 +157,23 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
       this.getView().addDependent(this.addWarningDialog);
       this.addWarningDialog.open();
     },
-    
+
     onAfterCloseWarningDialog: function () {
       this.addWarningDialog.close();
       this.addWarningDialog.destroy();
     },
 
     onDeleteReview: function () {
-      let reviews = this.localStorage.get("reviews") ?? [];
+      let reviews = this.controller.localStorage.get("reviews") ?? [];
 
       reviews = reviews.filter((review) => {
         return review.comment != this.param1;
       });
-      localStorageReviews.put("reviews", reviews);
+      this.controller.localStorage.put("reviews", reviews);
 
       const table = this.controller.getView().byId("book-reviews");
       table.removeAllItems();
       this.controller.populateTableOfReviews();
-
     },
 
     populateTableOfReviews: function () {
@@ -234,7 +233,8 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
         text: "Delete",
       });
       deleteButton.attachPress(this.onDeleteReview, {
-        param1: textOfTheReview, controller: this
+        param1: textOfTheReview,
+        controller: this,
       });
       const buttonToBeAdded = new sap.m.ColumnListItem({
         cells: [deleteButton],
