@@ -103,11 +103,12 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
       const tableOfReviews = this.getView().byId("book-reviews");
       this.counterForReviews = this.localStorage.get("counterReviews") ?? 0;
 
-      //First post the stars:
-      //refactor
       const idBook = this.getIdFromUrl();
+
+      //verify if there are more than 3 reviews for the current book
       const allTheReviews = this.localStorage.get("reviews") ?? [];
       let reviewsForCurrentBook = [];
+
       allTheReviews.forEach((review) => {
         if (review.idBook === idBook) {
           reviewsForCurrentBook.push(review);
@@ -131,20 +132,23 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
             comment: comment,
           },
         ]);
+
         //increase the counter
         this.counterForReviews = this.counterForReviews + 1;
         stars.setValue(0);
+
         //Update the current rating
         const currentRating = this.getAverageRating();
         this.ratingIndicator.setValue(currentRating);
         const averageRatingLabel = this.getView().byId("average-rating");
         const averageRatingText = currentRating + "/5";
         averageRatingLabel.setText(averageRatingText);
-      }else{
+      } else {
         this.openDialogForWarning();
         stars.setValue(0);
       }
     },
+
     openDialogForWarning: function () {
       this.addWarningDialog = sap.ui.xmlfragment(
         "library.view.dialogs.AddReviewWarning",
@@ -153,27 +157,24 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
       this.getView().addDependent(this.addWarningDialog);
       this.addWarningDialog.open();
     },
+    
     onAfterCloseWarningDialog: function () {
       this.addWarningDialog.close();
       this.addWarningDialog.destroy();
     },
 
     onDeleteReview: function () {
-      let localStorageReviews = jQuery.sap.storage(
-        jQuery.sap.storage.Type.local
-      );
+      let reviews = this.localStorage.get("reviews") ?? [];
 
-      let reviews = localStorageReviews.get("reviews") ?? [];
-      
       reviews = reviews.filter((review) => {
-        return (
-          review.comment != this.param1
-        );
+        return review.comment != this.param1;
       });
       localStorageReviews.put("reviews", reviews);
 
-      //since we do not have access to the instances of the class inside the event to call onInit() refresh the page so it will eventually be called
-      location.reload();
+      const table = this.controller.getView().byId("book-reviews");
+      table.removeAllItems();
+      this.controller.populateTableOfReviews();
+
     },
 
     populateTableOfReviews: function () {
@@ -197,9 +198,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
         width: "94vw",
         backgroundDesign: "Transparent",
         direction: "Row",
-        items: [
-          stars
-        ],
+        items: [stars],
       });
 
       const starsToBePosted = new sap.m.ColumnListItem({
@@ -233,13 +232,14 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
       const deleteButton = new sap.m.Button({
         type: "Reject",
         text: "Delete",
-      })
-      deleteButton.attachPress(this.onDeleteReview, {param1: textOfTheReview})
+      });
+      deleteButton.attachPress(this.onDeleteReview, {
+        param1: textOfTheReview, controller: this
+      });
       const buttonToBeAdded = new sap.m.ColumnListItem({
         cells: [deleteButton],
       });
       tableOfReviews.addItem(buttonToBeAdded);
     },
-
   });
 });
