@@ -174,6 +174,14 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BookDetails) {
       const table = this.controller.getView().byId("book-reviews");
       table.removeAllItems();
       this.controller.populateTableOfReviews();
+      
+      //Update the current rating
+      const currentRating = this.getAverageRating();
+      this.ratingIndicator.setValue(currentRating);
+      const averageRatingLabel = this.getView().byId("average-rating");
+      const averageRatingText = currentRating + "/5";
+      averageRatingLabel.setText(averageRatingText);
+
     },
 
     populateTableOfReviews: function () {
