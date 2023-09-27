@@ -18,6 +18,30 @@ sap.ui.define(
         addButton.addStyleClass("sapUiSmallPadding");
         addButton.addStyleClass("sapUiSmallMargin");
         addButton.addStyleClass("sapUiTextHighlight");
+
+        const ROImage = new sap.m.Image({ src: "/images/romanian.png", width: "4vh"});
+        ROImage.attachPress(function () {
+          this.toLanguagePage('sap-language=RO');
+        }, this);
+        
+
+        const UkImage = new sap.m.Image({ src: "/images/united-kingdom.png", width: "4vh"});
+        UkImage.attachPress(function () {
+          this.toLanguagePage('sap-language=EN');
+        }, this);
+        
+        const FlexBoxImages = this.getView().byId("flex-box-images");
+        let currentWindow = window.location.href;
+
+        if (currentWindow.includes("&sap-language=EN")) {
+          FlexBoxImages.addItem(ROImage);
+        }
+        if (currentWindow.includes("&sap-language=RO")) {
+          FlexBoxImages.addItem(UkImage);
+        }
+        if (currentWindow.includes("&sap-language=RO") === false && currentWindow.includes("&sap-language=EN") === false) {
+          FlexBoxImages.addItem(ROImage);
+        }
       },
 
       openDialogForAddNewBook: function () {
@@ -103,7 +127,7 @@ sap.ui.define(
       populateTable: function () {
         const table = this.getView().byId("books-table");
         let books = this.localStorage.get("books") ?? [];
-  
+
         books.forEach((item) => {
           const cellTitle = new sap.m.Text({ text: item.title });
           const cellAutor = new sap.m.Text({ text: item.author });
@@ -238,7 +262,7 @@ sap.ui.define(
         });
 
         this.oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-        this.oRouter.navTo("BookDetails", {id: books[index].id });
+        this.oRouter.navTo("BookDetails", { id: books[index].id });
 
         this.updateBookDialog.close();
         this.updateBookDialog.destroy();
@@ -260,7 +284,7 @@ sap.ui.define(
           currentWindow = currentWindow.replace("&sap-language=RO", "");
         }
 
-        let sNewUrl = currentWindow + '&'+ language;
+        let sNewUrl = currentWindow + '&' + language;
         window.location.href = sNewUrl;
       },
     });

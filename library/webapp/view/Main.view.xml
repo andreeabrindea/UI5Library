@@ -14,21 +14,8 @@
                 id="flex-box-images"
                 alignItems="Start"
                 justifyContent="End"
+                class="sapUiMediumMarginBeginEnd"
             >
-                <items>
-                    <Image
-                        id="uk-flag"
-                        src="/images/united-kingdom.png"
-                        width="3vh"
-                        press="toLanguagePage('sap-language=EN')"
-                    />
-                        <Image
-                            id="romanian-flag"
-                            src="/images/romanian.png"
-                            width="3vh"
-                            press="toLanguagePage('sap-language=RO')"
-                        />
-                </items>
             </FlexBox>
             <Button
                 type="Emphasized"
