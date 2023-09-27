@@ -10,4 +10,3 @@ archive.zip
 .*_mta_build_tmp
 ./vscode
 package-lock.json
-package.json
